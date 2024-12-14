@@ -6,7 +6,6 @@
 #include <iostream>
 #include <filesystem>
 #include <io.h>
-//#include <unistd.h>
 
 void Record::print(std::ostream& out, char sep) {
 	out << id << sep 
@@ -146,32 +145,41 @@ std::vector<int> DB::find_by_sname(const std::string& sname) {
 int DB::find_by_id(int id) {
 	Record res;
 	int index = id - 1;
+	int index_max = get_record_count();
+	if (index_max == 0) {
+		return -1;
+	}
+
+	int index_min = -1;
 	int iter_count = 0;
-	int step = get_record_count();
 	while (true) {
 		res = get_record(index);
 		if (res.id == id) {
 			break;
 		}
+		
 		if (res.id > id) {
-			step = std::min(step - 1, res.id - id);
-			if (step <= 0) {
-				res.id = -1;
-				break;
+			index -= res.id - id;
+			if (index <= index_min) {
+				index = index_min + 1;
 			}
-			index -= step;
-			if (index < 0) {
-				index = 0;
-			}
+
+			index_min = index;
 		}
 		else {
-			step = std::min(step - 1, id - res.id);
-			if (step <= 0) {
-				res.id = -1;
-				break;
+			index += id - res.id;
+			if (index >= index_max) {
+				index = index_max - 1;
 			}
-			index += step;
+
+			index_max = index;
 		}
+
+		if (index_min >= index_max) {
+			res.id = -1;
+			break;
+		}
+
 		iter_count++;
 		if (iter_count > 10) {
 			res.id = -1;

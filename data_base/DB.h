@@ -21,7 +21,7 @@ class DB
 public:
 	DB();
 	~DB() {
-		fclose(_file);
+		if (_file) fclose(_file);
 	}
 	
 	bool open(const std::string& file_name);

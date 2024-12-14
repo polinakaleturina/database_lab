@@ -25,16 +25,16 @@ void test() {
 
     //db.export_to_file("d:/test/db/test.csv");
 
-    /*std::cout << "search by sname:\n";
+    std::cout << "search by sname:\n";
     auto recs = db.find_by_sname("white");
     for (auto rec : recs) {
-        rec.print(std::cout);
+        db.get_record(rec).print(std::cout);
     }
     std::cout << "search by id:\n";
     auto rec = db.find_by_id(5);
-    rec.print(std::cout);
+    db.get_record(rec).print(std::cout);
     rec = db.find_by_id(2);
-    rec.print(std::cout);*/
+    db.get_record(rec).print(std::cout);
 }
 
 std::vector<std::string> pars_line(const std::string& line) {
@@ -155,6 +155,9 @@ int main()
                             }
                         }
                     }
+                }
+                else {
+                    std::cout << "unknown command " << cmd << std::endl;
                 }
             }
             catch (const std::exception& ex) {
