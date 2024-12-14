@@ -146,9 +146,13 @@ int DB::find_by_id(int id) {
 	Record res;
 	int index = id - 1;
 	int index_max = get_record_count();
-	if (index_max == 0 || index < 0 || index >= index_max) {
+	if (index_max == 0 || index < 0) {
 		return -1;
 	}
+	if (index >= index_max - 1) {
+		index = index_max - 1;
+	}
+
 	index_max = index;
 	int index_min = -1;
 	int iter_count = 0;
